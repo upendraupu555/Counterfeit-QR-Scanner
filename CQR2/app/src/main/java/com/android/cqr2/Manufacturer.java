@@ -39,6 +39,8 @@ public class Manufacturer extends AppCompatActivity {
     Button add_db;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    Block block;
+    int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,16 +92,20 @@ public class Manufacturer extends AppCompatActivity {
     }
 
     public void database() {
-        databaseReference.push().setValue(dataEdt.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        block = new Block(index,System.currentTimeMillis(),null,dataEdt.getText().toString());
+        block.mineBlock(0);
+        databaseReference.push().setValue(block.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful())
-                    Toast.makeText(Manufacturer.this, "data added", Toast.LENGTH_SHORT).show();
+                if (task.isSuccessful()){
+                    databaseReference.push().setValue(dataEdt.getText().toString());
+                    Toast.makeText(Manufacturer.this, "data added", Toast.LENGTH_SHORT).show();}
                 else
                     Toast.makeText(Manufacturer.this, "Fail to add data ", Toast.LENGTH_SHORT).show();
 
             }
         });
+        index++;
     }
 
     public void logout() {
